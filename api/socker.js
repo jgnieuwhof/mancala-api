@@ -16,7 +16,7 @@ export default async ({ io }) => {
       global.state = u({
         users: { [socket.id]: { id: socket.id, room: null } },
       }, global.state)
-      console.log(chalk.yellow(`Connected: `, JSON.stringify(global.state, null, 4)))
+      console.log(chalk.yellow(`${socket.id} connected!`))
     }
     catch (e) {
       console.log(chalk.red(`Error while adding a user connection: ${e}`))

@@ -6,7 +6,7 @@ import chalk from 'chalk'
 import { generateId } from '../helpers/object'
 
 export default ({ io, socket }) => {
-  socket.on(`client::findOpponent`, async ({ settings, gems }) => {
+  socket.on(`client::findOpponent`, async ({ settings, gems: startingGems }) => {
     try {
       let roomUpdate
       let state = global.state
@@ -19,7 +19,7 @@ export default ({ io, socket }) => {
       }
       else {
         roomId = generateId({ object: state.rooms })
-        roomUpdate = { id: roomId, player1: user.id, settings, gems }
+        roomUpdate = { id: roomId, player1: user.id, settings, gems: startingGems }
       }
       state = u({
         users: { [user.id]: { room: roomId } },
@@ -28,12 +28,15 @@ export default ({ io, socket }) => {
       global.state = state
       socket.join(roomId)
 
-      let room = state.rooms[roomId]
-      if (room.player1 && room.player2) {
-        io.to(roomId).emit(`server::matchMade`, { gems: room.gems })
+      let { gems, player1, player2 } = state.rooms[roomId]
+      if (player1 && player2) {
+        io.to(roomId).emit(`server::matchMade`, { gems, player1 })
+        console.log(chalk.green(`${player1} and ${player2} are now playing in room ${roomId}`))
+        console.log(chalk.blue(JSON.stringify(global.state, null, 4)))
       }
-
-      console.log(JSON.stringify(global.state, null, 4))
+      else {
+        console.log(chalk.yellow(`${player1} is waiting in room ${roomId}`))
+      }
     }
     catch (e) {
       console.log(chalk.red(`Error in client::findOpponent: ${e}`))
