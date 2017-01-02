@@ -32,7 +32,6 @@ export default ({ io, socket }) => {
       if (player1 && player2) {
         io.to(roomId).emit(`server::matchMade`, { gems, player1 })
         console.log(chalk.green(`${player1} and ${player2} are now playing in room ${roomId}`))
-        console.log(chalk.blue(JSON.stringify(global.state, null, 4)))
       }
       else {
         console.log(chalk.yellow(`${player1} is waiting in room ${roomId}`))

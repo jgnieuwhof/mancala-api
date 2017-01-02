@@ -2,7 +2,8 @@
   "name": "mancala-api",
   "version": "0.0.0",
   "scripts": {
-    "start": "nodemon index.js"
+    "start": "nodemon index.js",
+    "start-prod": ". ./run-start-prod.sh"
   },
   "dependencies": {
     "babel-eslint": "^7.1.1",
@@ -26,6 +27,7 @@
     "babel-preset-stage-0": "^6.16.0",
     "chalk": "^1.1.3",
     "eslint": "^3.12.2",
+    "forever-monitor": "^1.7.1",
     "lodash": "^4.17.4",
     "updeep": "^1.0.0"
   }
