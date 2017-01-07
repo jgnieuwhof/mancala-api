@@ -4,6 +4,7 @@ import findOpponent from './findOpponent'
 import abandonGame from './abandonGame'
 import makeMove from './makeMove'
 import finishGame from './finishGame'
+import setUsername from './setUsername'
 
 export default [
   disconnect,
@@ -11,4 +12,5 @@ export default [
   abandonGame,
   makeMove,
   finishGame,
+  setUsername,
 ]

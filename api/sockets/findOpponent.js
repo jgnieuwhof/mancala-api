@@ -8,16 +8,18 @@ import { generateId } from '../helpers/object'
 export default ({ io, socket }) => {
   socket.on(`client::findOpponent`, async ({ settings, gems: startingGems }) => {
     try {
-      let roomUpdate
+      let roomUpdate, isPlayer1
       let state = global.state
       let user = state.users[socket.id]
       let roomId = Object.keys(state.rooms).find(roomId => {
         return !state.rooms[roomId].player2 && _.isEqual(state.rooms[roomId].settings, settings)
       })
       if (roomId) {
+        isPlayer1 = false
         roomUpdate = { player2: user.id }
       }
       else {
+        isPlayer1 = true
         roomId = generateId({ object: state.rooms })
         roomUpdate = { id: roomId, player1: user.id, settings, gems: startingGems }
       }
@@ -30,7 +32,17 @@ export default ({ io, socket }) => {
 
       let { gems, player1, player2 } = state.rooms[roomId]
       if (player1 && player2) {
-        io.to(roomId).emit(`server::matchMade`, { gems, player1 })
+        io.to(roomId).emit(`server::matchMade`, {
+          gems,
+          player1: {
+            username: state.users[player1].username,
+            socket: player1,
+          },
+          player2: {
+            username: state.users[player2].username,
+            socket: player2,
+          },
+        })
         console.log(chalk.green(`${player1} and ${player2} are now playing in room ${roomId}`))
       }
       else {
